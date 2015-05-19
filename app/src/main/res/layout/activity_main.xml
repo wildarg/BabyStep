@@ -1,0 +1,58 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="74dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:textColor="@color/icons"
+                android:text="TED"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleTextView"
+                android:textColor="@color/primary_light"
+                android:text="TED RSS for babystep" />
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignTop="@+id/titleTextView"
+                android:layout_toLeftOf="@+id/refreshButton"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/refreshButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/titleTextView"
+                android:background="@drawable/button_background"
+                android:src="@mipmap/ic_refresh_white_36dp"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+</LinearLayout>
