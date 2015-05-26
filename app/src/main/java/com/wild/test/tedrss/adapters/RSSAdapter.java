@@ -6,10 +6,8 @@ package com.wild.test.tedrss.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.squareup.picasso.Picasso;
@@ -32,13 +29,10 @@ import java.util.Locale;
 public class RSSAdapter extends RecyclerView.Adapter<RSSAdapter.RSSItemViewHolder> {
 
     private final PlayController playController;
-    private Context context;
     private Cursor data;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault());
-    private static RSSItemViewHolder currentPlay = null;
 
     public RSSAdapter(Context context) {
-        this.context = context;
         playController = new PlayController(context);
     }
 
@@ -66,18 +60,6 @@ public class RSSAdapter extends RecyclerView.Adapter<RSSAdapter.RSSItemViewHolde
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-    }
-
-    protected static void startPlay(RSSItemViewHolder holder) {
-        if (currentPlay != null)
-            stopCurrentPlay();
-    }
-
-    private static void stopCurrentPlay() {
-        currentPlay.videoView.stopPlayback();
-        currentPlay.image.setVisibility(View.VISIBLE);
-        currentPlay.videoView.setVisibility(View.GONE);
-        currentPlay = null;
     }
 
     public static class RSSItemViewHolder extends RecyclerView.ViewHolder {

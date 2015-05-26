@@ -1,4 +1,4 @@
-package com.wild.test.tedrss.domain;
+package com.wild.test.tedrss.rest.resources;
 /*
  * Created by Wild on 15.05.2015.
  */
@@ -45,8 +45,6 @@ public class RssItem {
             return sdf.parse(pubDate).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e("#RssItem", "error date parse " + pubDate + ": " + e.getMessage());
-            Log.e("#RssItem", "now date: " + sdf.format(new Date()));
             return Long.valueOf(0);
         }
     }

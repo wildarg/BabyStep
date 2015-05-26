@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,20 +49,16 @@ public class RSSFragment extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d("#Fragment", "create loader");
-        return new CursorLoader(getActivity(), RSSContract.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), RSSContract.CONTENT_URI, null, null, null, RSSContract.PUBDATE + " desc");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d("#Fragment", "load finished. size: " + data.getCount());
         adapter.swapCursor(data);
-        //recyclerView.setAdapter(new RSSAdapter(data));
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d("#Fragment", "loader reset");
         adapter.swapCursor(null);
     }
 }

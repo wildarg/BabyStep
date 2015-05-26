@@ -32,7 +32,6 @@ public class RSSProvider extends ContentProvider{
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.d("#RSSProvider", "query " + uri);
         Cursor c;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         switch (matcher.match(uri)) {
@@ -61,7 +60,12 @@ public class RSSProvider extends ContentProvider{
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        throw new IllegalArgumentException("Delete not supported");
+        int match = matcher.match(uri);
+        if (match != RSS_MATCH)
+            throw new IllegalArgumentException("Unknown uri " + uri);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int cnt = db.delete(RSSContract.RSS, null, null);
+        return cnt;
     }
 
     @Override
@@ -75,16 +79,12 @@ public class RSSProvider extends ContentProvider{
         int counter = 0;
         db.beginTransaction();
         try {
-            //delete all
-            db.delete(RSSContract.RSS, null, null);
-            //insert
             for (ContentValues val: values) {
                 db.insert(RSSContract.RSS, null, val);
                 counter++;
             }
             db.setTransactionSuccessful();
             if (counter > 0) {
-                Log.d("#RSSProvider", "inserted " + counter);
                 getContext().getContentResolver().notifyChange(uri, null);
             }
             return 0;
@@ -92,6 +92,8 @@ public class RSSProvider extends ContentProvider{
             db.endTransaction();
         }
     }
+
+
 
     private class DBOpenHelper extends SQLiteOpenHelper {
 

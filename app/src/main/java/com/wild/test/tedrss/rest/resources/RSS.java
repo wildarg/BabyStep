@@ -1,4 +1,4 @@
-package com.wild.test.tedrss.domain;
+package com.wild.test.tedrss.rest.resources;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;

@@ -1,4 +1,4 @@
-package com.wild.test.tedrss.domain;
+package com.wild.test.tedrss.rest.resources;
 /*
  * Created by Wild on 15.05.2015.
  */

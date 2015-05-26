@@ -14,8 +14,10 @@ import com.wild.test.tedrss.services.RSSServiceHelper;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String REQUEST_ID = "request_id";
     private BroadcastReceiver receiver;
     private ProgressBar progress;
+    private long requestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +36,20 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new RSSFragment())
                     .commit();
             refreshRss();
+        } else {
+            requestId = savedInstanceState.getLong(REQUEST_ID, -1);
+            if (RSSServiceHelper.getInstance(this).isRequestPending(requestId))
+                showProgress();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (requestId > 0 && !RSSServiceHelper.getInstance(this).isRequestPending(requestId)) {
+            hideProgress();
+            requestId = -1;
+        }
         registerReceiver(receiver, new IntentFilter(RSSServiceHelper.BROADCAST_REQUEST_RESULT));
     }
 
@@ -56,14 +66,21 @@ public class MainActivity extends AppCompatActivity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                requestId = -1;
                 hideProgress();
             }
         };
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(REQUEST_ID, requestId);
+    }
+
     private void refreshRss() {
         showProgress();
-        RSSServiceHelper.getInstance(this).refreshRSS();
+        requestId = RSSServiceHelper.getInstance(this).refreshRSS();
     }
 
     private void showProgress() {

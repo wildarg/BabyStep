@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class RSSServiceHelper {
 
@@ -16,28 +19,37 @@ public class RSSServiceHelper {
     public static final String EXTRA_MESSAGE = "extra_message";
     private static RSSServiceHelper instance;
     private final Context context;
+    private static Object lock = new Object();
+    private List<Long> pendingRequests = new ArrayList<>();
 
     public static RSSServiceHelper getInstance(Context context) {
-        if (instance == null)
-            instance = new RSSServiceHelper(context);
+        synchronized (lock) {
+            if (instance == null)
+                instance = new RSSServiceHelper(context);
+        }
         return instance;
     }
 
-    public RSSServiceHelper(Context context) {
+    private RSSServiceHelper(Context context) {
         this.context = context;
     }
 
-    public void refreshRSS() {
+    public long refreshRSS() {
+        long requestId = generateRequestID();
+        pendingRequests.add(requestId);
+
         Intent srv = new Intent(context, RSSService.class);
-        srv.putExtra(RSSService.EXTRA_CALLBACK, createServiceCallback());
+        srv.putExtra(RSSService.EXTRA_CALLBACK, createServiceCallback(requestId));
         context.startService(srv);
+
+        return requestId;
     }
 
-    private ResultReceiver createServiceCallback() {
+    private ResultReceiver createServiceCallback(final long requestId) {
         ResultReceiver callback = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                Log.d("#ServiceHelper", "done loading");
+                pendingRequests.remove(requestId);
                 sendBroadcast(resultCode, resultData);
             }
         };
@@ -51,4 +63,14 @@ public class RSSServiceHelper {
             result.putExtra(EXTRA_MESSAGE, resultData.getString(RSSService.EXTRA_MESSAGE));
         context.sendBroadcast(result);
     }
+
+    private long generateRequestID() {
+        long requestId = UUID.randomUUID().getLeastSignificantBits();
+        return requestId;
+    }
+
+    public boolean isRequestPending(long requestId) {
+        return pendingRequests.contains(requestId);
+    }
+
 }

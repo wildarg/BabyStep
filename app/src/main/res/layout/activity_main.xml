@@ -33,6 +33,7 @@
                 android:id="@+id/progress"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:padding="8dp"
                 android:layout_alignTop="@+id/titleTextView"
                 android:layout_toLeftOf="@+id/refreshButton"
                 android:indeterminate="true"
